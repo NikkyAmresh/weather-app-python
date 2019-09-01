@@ -18,6 +18,10 @@ To get your API please visit [here](https://openweathermap.org/api/)
 ### auth.py
     apikey='YOUR-API-KEY' 
     
+----
+## Deployment
+* check out live deployment [here](https://weather-app-python.herokuapp.com) 
+
 
 ----
 ## Thanks
