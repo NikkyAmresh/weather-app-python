@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Weather App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
+        <style>
+body {
+    background:#080808;
+    font-family: 'Stylish', sans-serif;
+    text-align:center;
+    color:#fafafa;
+}
+.location{
+    text-align:center;
+    font-size:28px;
+    position:fixed;
+    width:100%;
+    z-index:1;
+    height:60px;
+    top:0;
+    padding-top:60px;
+    padding-bottom:10px;
+    background:#080808;
+}
+#icon{
+    transform:scale(2.0);
+}
+.search{
+    font-size:40px;
+    z-index:2;
+    right:30px;
+    top:10px;
+    position:fixed;
+}
+
+small{
+    color:#999999;
+}
+.temp{
+    color:#fff;
+    padding-top:120px;
+    font-size:120px;
+}
+.dif{
+    margin-top:-30px;
+    color:#cacaca;
+    font-size:20px;
+}
+.cncl{
+    color:#fafafa;
+    margin-top:-20px;
+    font-size:25px;
+}
+a{
+color :#252525;
+} 
+.box{
+    width:100%;
+    height:auto;
+    background:#252525;
+    padding-top:30px;
+    font-size:20px;
+    overflow:scroll;
+    padding-left:10px;
+    padding-right:10px;
+    border-radius:30px;
+    padding-bottom:30px;
+}
+.box2{
+    padding:10px;
+    padding-left:10px;
+    background:#252525;
+    border-radius:30px;
+    font-size:25px;
+    overflow:scroll;
+}
+td img{
+    filter:invert(100);
+    float:right;
+}
+.td{
+    padding-right:30px;
+}
+.td1{
+    padding-right:30px;
+}
+td{
+    text-align:left ;
+}
+.bar{
+   border-left:1px solid #fcfcfc;
+}
+.bar1{
+   border-left:1px solid #fcfcfc;
+}
+.box2 table td{
+    text-align:center;
+    font-size:15px;
+    padding:15px;
+    padding-top:-30px;
+}
+#form{
+    display:none;
+    background:#080808;
+    z-index:2;
+    height:150px;
+    width:100%;
+    padding:10px;
+    position:fixed;
+    top:0;
+    left:0;
+}
+#sbox{
+    background:#080808;
+    outline:none;
+    border:none;
+    height:50px;
+    padding:10px;
+    width:92%;
+    color:#fcfcfc;
+    font-family:'Stylish', sans-serif;;
+    border-radius:10px;
+    z-index:3;
+    border:5px solid #252525;
+    font-size:20px;
+    position:fixed;
+    top:10;
+    left:4%;
+}
+#sbmit,#can{
+    background:#080808;
+    outline:none;
+    height:50px;
+    padding:10px;
+    width:20%;
+    text-align:center;
+    color:#fcfcfc;
+    font-family:'Stylish', sans-serif;;
+    border-radius:10px;
+    z-index:3;
+    border:1px solid #252525;
+    font-size:15px;
+    position:fixed;
+    top:67px;
+}
+#sbmit{
+    left:25%;
+}
+#can{
+    right:25%;
+}
+#slist{
+    background:#080808;
+    height:30px;
+    padding:10px;
+    width:92%;
+    color:#fcfcfc;
+    font-family:'Stylish', sans-serif;;
+    z-index:54;
+    border:5px solid #252525;
+    font-size:25px;
+}
+
+</style>
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    </head>
+    <body>
+    <div id="sicn" class="search"><i class="zmdi zmdi-search"></i></div>
+    <form id="form" onsubmit="return false">
+        <input list="slist" placeholder="Enter City Code" autofocus type="search" id="sbox">
+        <datalist id="slist">
+            <option value="patna"></option>
+            <option value="patna1"></option>
+        </datalist>
+        <input id="sbmit" value="Submit" type="submit">
+        <input id="can" value="Cancel" type="reset">
+    </form><div onclick=initGeolocation() class="location"><i class="zmdi zmdi-pin"></i> <span id="city">{{d['name']}}</span><br><small><small><span id="time"><script>var time= new Date();
+var day=["Sun","Mon","Sun","Tue","Wed","Thu","Fri","Sat"]
+var month=["January","February","March","April","May","Jun","July","August","September","November","December"]
+document.write(day[time.getDay()]+" "+time.getDate()+" "+month[time.getMonth()]+" "+time.getHours()+":"+time.getMinutes())</script></span></small></small></div>  
+      <div class="temp"><img id="icon" src="https://openweathermap.org/img/wn/{{d['weather'][0]['icon']}}.png"><span id="temp" ></div></div><br>
+     <!--div class="dif" id="minmax">37°/29° feels like 36°</div-->
+     <br><br>
+     <div class="cncl" id="cncl">{{d["weather"][0]["main"]}}</div>
+     <br><br><br>
+     Sunset/Sunrise<br><br>
+     <table class="box">
+     <tr>
+     	
+     <td rowspan="2"><img height="30px" src="https://i.ibb.co/zx1Gb1k/sunrise.png" border="0"></a></td>
+           <td colspan="2" >Sunrise</td>  
+           <td rowspan="2" class="bar">
+           <img height="30px" src="https://i.ibb.co/9gy46kN/Sunset-512.png" border="0"></td>
+         <td class="td" colspan="2">Sunset</td>
+         
+     </tr>
+     <tr><td colspan=2 id="rise"></td>
+         <td colspan="2" id="set"></td>
+         
+     </tr>
+     
+     </table>
+     <br><br><br>
+     <table class="box">
+     <tr>
+     <td rowspan="2"><img height="40px" src="https://openweathermap.org/img/wn/02d.png" border="0"></td>
+           <td colspan="2" class="td1" >Min Temp.</td>  
+           <td rowspan="2" class="bar1">
+           <img height="40px" src="https://openweathermap.org/img/wn/01d.png" border="0"></td>
+         <td class="td" colspan="2">Max Temp.</td>
+         
+     </tr>
+     <tr><td colspan=2 id="min"></td>
+         <td colspan="2" id="max"></td>
+         
+     </tr>
+         
+     <tr>
+     <td rowspan="2"><img src="https://i.ibb.co/HXXWgHR/1561945243452.png"  height="30px" border="0"></td>
+           <td colspan="2" >Humidity</td>  
+           <td rowspan="2" class="bar">
+           <img src="https://i.ibb.co/JsB2Gh0/92-pressure-air-wind-weather-512.png" height="30px" border="0"></td>
+         <td class="td" colspan="2">Pressure</td>
+         
+     </tr>
+     <tr><td colspan=2 id="hum">{{d["main"]["humidity"]}}%</td>
+         <td colspan="2" id="prs">{{d['main']['pressure']}}hpa</td>
+         
+     </tr>
+     <tr>
+     <td rowspan="2"><img height="30px" src="https://i.ibb.co/J5YJ99G/unnamed-1.png" border="0"></td>
+           <td colspan="2" >Precipitation</td>  
+           <td rowspan="2" class="bar">
+           <img height="30px" src="https://i.ibb.co/y0QGnKJ/aami9-58-512.png" border="0"></td>
+         <td class="td" colspan="2">UV index</td>
+         
+     </tr>
+     <tr><td colspan=2 id="rain">10%</td>
+         <td colspan="2" id="uvi">low</td>
+         
+     </tr>
+     
+         
+     </table>
+     <br>
+     UPCOMING FORECAST<br>
+     <br>
+     <div class="box2">
+     <table>
+         <tr id="tmtd">
+         	{%for i in range(0,len)%}
+           <td>{{db["list"][i]["dt_txt"][11:16] }} <br>{{db["list"][i]["dt_txt"][5:7] }} /{{db["list"][i]["dt_txt"][8:11]}}</td> 
+             {%endfor%} 
+         </tr>
+         <tr id="mn">
+              	{%for i in range(0,len)%}
+           <td>{{db['list'][i]['weather'][0]["main"]}} </td> 
+             {%endfor%} 
+         </tr>
+         <tr id="ic">
+              	{%for i in range(0,len)%}
+           <td><img src='https://openweathermap.org/img/wn/{{db['list'][i]['weather'][0]["icon"]}}@2x.png'><script>document.write('{{db['list'][i]['main']['temp']-273.15}}'.slice(0,4))</script>°</td>
+             {%endfor%} 
+         </tr>
+         <tr id="h">
+             
+         </tr>
+     </table>
+     </div>
+     <br>
+    <p>
+        If you have any question or feedback write me to
+        <a href="https://m.me/NikkiAmresh">@NikkyAmresh</a>
+.
+    </p>
+    <script>
+     	var rise=new Date({{d["sys"]["sunrise"]}})
+var sset=new Date({{d["sys"]["sunset"]}} )
+$("#rise").html(rise.toLocaleTimeString())
+$("#set").html(sset.toLocaleTimeString())
+     	</script>
+      <script type="text/javascript">
+success()
+     function success()
+     {
+    $.ajax({
+        url: "/cityc/{{d['id']}}", 
+        success: function(data) {
+     $("#city").html(data["name"]+"["+data["sys"]["country"]+"]")
+var time= new Date();
+var day=["Sun","Mon","Sun","Tue","Wed","Thu","Fri","Sat"]
+var month=["January","February","March","April","May","Jun","July","August","September","November","December"]
+$("#time").html(day[time.getDay()]+" "+time.getDate()+" "+month[time.getMonth()]+" "+time.getHours()+":"+time.getMinutes())
+$("#icon").attr("src","https://openweathermap.org/img/wn/"+data['weather'][0]['icon']+".png")
+$("#temp").html(Math.floor(data["main"]["temp"]-273.15)+"°")
+$("#min").html(Math.floor(data["main"]["temp_min"]-273.15)+"°")
+$("#max").html(Math.floor(data["main"]["temp_max"]-273.15)+"°")
+$("#cncl").html(data["weather"][0]["main"])
+$("#hum").html(data["main"]["humidity"]+"%")
+$("#prs").html(data["main"]["pressure"]+"hpa")
+var rise=new Date(data["sys"]["sunrise"])
+var sset=new Date(data["sys"]["sunset"])
+$("#rise").html(rise.toLocaleTimeString())
+$("#set").html(sset.toLocaleTimeString())
+
+     }, error(e){
+ 
+     	} 
+ }) 
+    $.ajax({
+        url: "/cityf/{{d['id']}}", 
+        success: function(db) {
+        	$("#tmtd").html('')
+        	for(var i=0;i<db["list"].length;i++){
+    var dt=month[Math.floor(db["list"][i]["dt_txt"].slice(5,7))-1]+"/"+db["list"][i]["dt_txt"].slice(8,11)
+var tm=db["list"][i]["dt_txt"].slice(11,16)
+var tem=Math.floor(db['list'][i]['main']['temp']-273.15)+"°"
+var m=db['list'][i]['weather'][0]["main"]
+var icon=db['list'][i]['weather'][0]["icon"]
+var hum=db['list'][i]['main']['humidity']
+$("#tmtd").append("<td>"+tm+"<br>"+dt+"</td>")
+}
+$("#mn").html('')
+for(var i=0;i<db["list"].length;i++){
+    var dt=month[Math.floor(db["list"][i]["dt_txt"].slice(5,7))-1]+"/"+db["list"][i]["dt_txt"].slice(8,11)
+var tm=db["list"][i]["dt_txt"].slice(11,16)
+var tem=Math.floor(db['list'][i]['main']['temp']-273.15)+"°"
+var m=db['list'][i]['weather'][0]["main"]
+var icon=db['list'][i]['weather'][0]["icon"]
+var hum=db['list'][i]['main']['humidity']
+$("#mn").append("<td>"+m+"</td>")
+}
+$("#ic").html('')
+for(var i=0;i<db["list"].length;i++){
+
+var tem=Math.floor(db['list'][i]['main']['temp']-273.15)+"°"
+var icon=db['list'][i]['weather'][0]["icon"]
+$("#ic").append("<td><img src='https://openweathermap.org/img/wn/"+icon+"@2x.png'>"+tem.slice(0,4)+"</td>")
+}
+$("#h").html('')
+for(var i=0;i<db["list"].length;i++){
+var hum=db['list'][i]['main']['humidity']
+$("#h").append("<td class=h>humidity<br>"+hum+"%</td>")
+}
+  }, error(e){
+ 
+     	} 
+ }) 
+} 
+     function fail()
+     {
+     	
+        // Could not obtain location
+     }
+     $(function(){
+     $("#sicn").click(function(){
+    $("#form").show(200);
+    $(this).hide()
+    
+})
+$("#sbox").on("keydown",function(){
+    search(this.value)
+})
+$("#sbox").on("keydown",function(){
+    search(this.value)
+})
+function search(q){
+    $.ajax({
+        url:"/search/"+q,
+        success:function(data){
+            $('#slist').html('')
+            for(var i=0;i<data.length;i++){
+            var  idd=data[i]['id']
+             var  name=data[i]['name']
+             var ct=data[i]['ct'] 
+                $("#slist").append("<option value="+idd+">"+name+"["+ct+"]"+"</option>")
+            }
+            
+        }, error(e){
+        //    alert(JSON.stringify(e)) 
+   } 
+    })
+}
+$("#can").click(function(){
+    $(this).parent().hide()
+    $("#sicn").show()
+})
+$("#sbmit").click(function(){
+    window.location.href="/city/"+$("#sbox").val()
+})
+}) 
+   </script>
+    </body>
+</html>

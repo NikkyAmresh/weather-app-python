@@ -1,0 +1,22 @@
+{
+  "name": "Weather app: Python",
+  "description": "A weather Python app.",
+  "image": "none",
+  "repository": "https://github.com/NikkyAmresh/weather-app-python",
+  "keywords": ["python", "weather" ],
+  "addons": [ "heroku-postgresql" ],
+  "env": {
+    "SECRET_KEY": {
+      "description": "The secret key for this application.",
+      "generator": "secret"
+    }
+  },
+  "environments": {
+    "test": {
+      "scripts": {
+        "test-setup": "python app.py",
+        "test": "python app.py "
+      }
+    }
+  }
+}
